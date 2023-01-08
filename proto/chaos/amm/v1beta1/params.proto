@@ -5,6 +5,17 @@ import "gogoproto/gogo.proto";
 
 option go_package = "github.com/fates1046/chaos/x/amm/types";
 
+// Params defines the parameters for the module.
 message Params {
   option (gogoproto.goproto_stringer) = false;
+
+  string fee_rate = 1 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
+
+  string min_initial_liquidity = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
 }
