@@ -1,0 +1,6 @@
+syntax = "proto3";
+package chaos.amm.v1beta1;
+
+option go_package = "github.com/fates1046/chaos/x/amm/types";
+
+service Msg {}
