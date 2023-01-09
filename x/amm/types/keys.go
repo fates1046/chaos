@@ -13,3 +13,9 @@ const (
 	// MemStoreKey defines the in-memory store key
 	MemStoreKey = "mem_amm"
 )
+
+var (
+	LastPairIDKey      = []byte{0x01}
+	PairKeyPrefix      = []byte{0x02}
+	PairIndexKeyPrefix = []byte{0x03}
+)
