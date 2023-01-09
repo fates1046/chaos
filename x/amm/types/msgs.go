@@ -5,6 +5,8 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
+const TypeMsgAddLiquidity = "add_liquidity"
+
 var _ sdk.Msg = (*MsgAddLiquidity)(nil)
 
 func (msg *MsgAddLiquidity) GetSigners() []sdk.AccAddress {
@@ -28,4 +30,11 @@ func (msg *MsgAddLiquidity) ValidateBasic() error {
 	}
 
 	return nil
+}
+
+func (msg *MsgAddLiquidity) Route() string { return RouterKey }
+func (msg *MsgAddLiquidity) Type() string  { return TypeMsgAddLiquidity }
+
+func (msg *MsgAddLiquidity) GetSignBytes() []byte {
+	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(msg))
 }
