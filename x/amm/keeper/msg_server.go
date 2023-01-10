@@ -27,6 +27,19 @@ func (m msgServer) AddLiquidity(c context.Context, msg *types.MsgAddLiquidity) (
 
 }
 
+func (m msgServer) RemoveLiquidity(c context.Context, msg *types.MsgRemoveLiquidity) (*types.MsgRemoveLiquidityResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+
+	withdrawnCoins, err := m.Keeper.RemoveLiquidity(
+		ctx, sdk.MustAccAddressFromBech32(msg.Sender), msg.Share)
+	if err != nil {
+		return nil, err
+	}
+	return &types.MsgRemoveLiquidityResponse{
+		WithdrawnCoins: withdrawnCoins,
+	}, nil
+}
+
 // NewMsgServerImpl returns an implementation of the MsgServer interface
 // for the provided Keeper.
 func NewMsgServerImpl(keeper Keeper) types.MsgServer {
