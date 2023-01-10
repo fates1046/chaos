@@ -22,6 +22,13 @@ func NewMsgAddLiquidity(sender sdk.AccAddress, coins sdk.Coins) *MsgAddLiquidity
 	}
 }
 
+func NewMsgRemoveLiquidity(sender sdk.AccAddress, share sdk.Coin) *MsgRemoveLiquidity {
+	return &MsgRemoveLiquidity{
+		Sender: sender.String(),
+		Share:  share,
+	}
+}
+
 func (msg *MsgAddLiquidity) GetSigners() []sdk.AccAddress {
 	addr, err := sdk.AccAddressFromBech32(msg.Sender)
 	if err != nil {
