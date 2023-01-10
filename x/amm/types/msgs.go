@@ -7,7 +7,10 @@ import (
 
 const TypeMsgAddLiquidity = "add_liquidity"
 
-var _ sdk.Msg = (*MsgAddLiquidity)(nil)
+var (
+	_ sdk.Msg = (*MsgAddLiquidity)(nil)
+	_ sdk.Msg = (*MsgRemoveLiquidity)(nil)
+)
 
 func NewMsgAddLiquidity(sender sdk.AccAddress, coins sdk.Coins) *MsgAddLiquidity {
 	return &MsgAddLiquidity{
@@ -44,4 +47,22 @@ func (msg *MsgAddLiquidity) Type() string  { return TypeMsgAddLiquidity }
 
 func (msg *MsgAddLiquidity) GetSignBytes() []byte {
 	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(msg))
+}
+
+func (msg *MsgRemoveLiquidity) GetSigners() []sdk.AccAddress {
+	addr, err := sdk.AccAddressFromBech32(msg.Sender)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{addr}
+}
+
+func (msg *MsgRemoveLiquidity) ValidateBasic() error {
+	if _, err := sdk.AccAddressFromBech32(msg.Sender); err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid sender address: %v", err)
+	}
+	if _, err := ParseShareDenom(msg.Share.Denom); err != nil {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+	}
+	return nil
 }

@@ -1,9 +1,11 @@
 package types
 
 import (
+	"fmt"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/address"
 	"strconv"
+	"strings"
 )
 
 const (
@@ -34,4 +36,11 @@ func PairReserveAddress(pair Pair) sdk.AccAddress {
 
 func ShareDenom(pair Pair) string {
 	return ShareDenomPrefix + strconv.FormatUint(pair.Id, 10)
+}
+
+func ParseShareDenom(denom string) (pairID uint64, err error) {
+	if !strings.HasPrefix(denom, ShareDenomPrefix) {
+		return 0, fmt.Errorf("share denom must have %s as prefix", ShareDenomPrefix)
+	}
+	return strconv.ParseUint(strings.TrimPrefix(denom, ShareDenomPrefix), 10, 64)
 }
