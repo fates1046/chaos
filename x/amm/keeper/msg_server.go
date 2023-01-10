@@ -40,6 +40,18 @@ func (m msgServer) RemoveLiquidity(c context.Context, msg *types.MsgRemoveLiquid
 	}, nil
 }
 
+func (m msgServer) SwapExactIn(c context.Context, msg *types.MsgSwapExactIn) (*types.MsgSwapExactInResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+	coinOut, err := m.Keeper.SwapExactIn(
+		ctx, sdk.MustAccAddressFromBech32(msg.Sender), msg.CoinIn, msg.MinCoinOut)
+	if err != nil {
+		return nil, err
+	}
+	return &types.MsgSwapExactInResponse{
+		CoinOut: coinOut,
+	}, nil
+}
+
 // NewMsgServerImpl returns an implementation of the MsgServer interface
 // for the provided Keeper.
 func NewMsgServerImpl(keeper Keeper) types.MsgServer {
