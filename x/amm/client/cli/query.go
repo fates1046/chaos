@@ -6,6 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/fates1046/chaos/x/amm/types"
 	"github.com/spf13/cobra"
+	"strconv"
 )
 
 // GetQueryCmd returns the cli query commands for this module
@@ -21,6 +22,7 @@ func GetQueryCmd() *cobra.Command {
 	cmd.AddCommand(
 		GetCmdQueryParams(),
 		GetCmdQueryPairs(),
+		GetCmdQueryPair(),
 	)
 
 	return cmd
@@ -70,6 +72,39 @@ func GetCmdQueryPairs() *cobra.Command {
 			}
 			res, err := queryClient.Pairs(cmd.Context(), &types.QueryPairsRequest{
 				Pagination: pageReq,
+			})
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+	flags.AddPaginationFlagsToCmd(cmd, "pairs")
+
+	return cmd
+}
+
+func GetCmdQueryPair() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "pair",
+		Short: "query a single pair",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientQueryContext(cmd)
+			if err != nil {
+				return err
+			}
+			queryClient := types.NewQueryClient(clientCtx)
+
+			pairID, err := strconv.ParseUint(args[0], 10, 64)
+			if err != nil {
+				return fmt.Errorf("invalid pair id: %w", err)
+			}
+			res, err := queryClient.Pair(cmd.Context(), &types.QueryPairRequest{
+				Id: pairID,
 			})
 			if err != nil {
 				return err
