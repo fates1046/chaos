@@ -13,6 +13,7 @@ const (
 var (
 	_ sdk.Msg = (*MsgAddLiquidity)(nil)
 	_ sdk.Msg = (*MsgRemoveLiquidity)(nil)
+	_ sdk.Msg = (*MsgSwapExactIn)(nil)
 )
 
 func NewMsgAddLiquidity(sender sdk.AccAddress, coins sdk.Coins) *MsgAddLiquidity {
@@ -82,4 +83,25 @@ func (msg *MsgRemoveLiquidity) Type() string  { return TypeMsgRemoveLiquidity }
 
 func (msg *MsgRemoveLiquidity) GetSignBytes() []byte {
 	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(msg))
+}
+
+func (msg MsgSwapExactIn) GetSigners() []sdk.AccAddress {
+	addr, err := sdk.AccAddressFromBech32(msg.Sender)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{addr}
+}
+
+func (msg MsgSwapExactIn) ValidateBasic() error {
+	if _, err := sdk.AccAddressFromBech32(msg.Sender); err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid sender address: %v", err)
+	}
+	if err := msg.CoinIn.Validate(); err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid coin in: %v", err)
+	}
+	if err := msg.MinCoinOut.Validate(); err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid min coin out: %v", err)
+	}
+	return nil
 }
