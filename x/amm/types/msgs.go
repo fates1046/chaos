@@ -8,6 +8,7 @@ import (
 const (
 	TypeMsgAddLiquidity    = "add_liquidity"
 	TypeMsgRemoveLiquidity = "remove_liquidity"
+	TypeMsgSwapExactIn     = "swap_exact_in"
 )
 
 var (
@@ -104,4 +105,11 @@ func (msg MsgSwapExactIn) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid min coin out: %v", err)
 	}
 	return nil
+}
+
+func (msg MsgSwapExactIn) Route() string { return RouterKey }
+func (msg MsgSwapExactIn) Type() string  { return TypeMsgSwapExactIn }
+
+func (msg MsgSwapExactIn) GetSignBytes() []byte {
+	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(&msg))
 }
