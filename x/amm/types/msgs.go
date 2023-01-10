@@ -41,6 +41,14 @@ func NewMsgSwapExactIn(sender sdk.AccAddress, coinIn, minCoinOut sdk.Coin) *MsgS
 	}
 }
 
+func NewMsgSwapExactOut(sender sdk.AccAddress, coinOut, maxCoinIn sdk.Coin) *MsgSwapExactOut {
+	return &MsgSwapExactOut{
+		Sender:    sender.String(),
+		CoinOut:   coinOut,
+		MaxCoinIn: maxCoinIn,
+	}
+}
+
 func (msg *MsgAddLiquidity) GetSigners() []sdk.AccAddress {
 	addr, err := sdk.AccAddressFromBech32(msg.Sender)
 	if err != nil {
