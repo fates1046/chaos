@@ -57,3 +57,18 @@ func (k Querier) Pairs(c context.Context, req *types.QueryPairsRequest) (*types.
 		Pagination: pageRes,
 	}, nil
 }
+
+func (k Querier) Pair(c context.Context, req *types.QueryPairRequest) (*types.QueryPairResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	ctx := sdk.UnwrapSDKContext(c)
+	pair, found := k.GetPair(ctx, req.Id)
+	if !found {
+		return nil, status.Errorf(codes.NotFound, "pair %d not found", req.Id)
+	}
+	return &types.QueryPairResponse{
+		Pair: pair,
+	}, nil
+}
