@@ -10,6 +10,7 @@ service Msg {
   rpc AddLiquidity(MsgAddLiquidity) returns (MsgAddLiquidityResponse);
   rpc RemoveLiquidity(MsgRemoveLiquidity) returns (MsgRemoveLiquidityResponse);
   rpc SwapExactIn(MsgSwapExactIn) returns (MsgSwapExactInResponse);
+  rpc SwapExactOut(MsgSwapExactOut) returns (MsgSwapExactOutResponse);
 }
 
 message MsgAddLiquidity {
@@ -45,4 +46,14 @@ message MsgSwapExactIn {
 
 message MsgSwapExactInResponse {
   cosmos.base.v1beta1.Coin coin_out = 1 [(gogoproto.nullable) = false];
+}
+
+message MsgSwapExactOut {
+  string sender = 1;
+  cosmos.base.v1beta1.Coin coin_out = 3 [(gogoproto.nullable) = false];
+  cosmos.base.v1beta1.Coin max_coin_in = 2 [(gogoproto.nullable) = false];
+}
+
+message MsgSwapExactOutResponse {
+  cosmos.base.v1beta1.Coin coin_in = 1 [(gogoproto.nullable) = false];
 }
