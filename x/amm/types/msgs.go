@@ -9,6 +9,13 @@ const TypeMsgAddLiquidity = "add_liquidity"
 
 var _ sdk.Msg = (*MsgAddLiquidity)(nil)
 
+func NewMsgAddLiquidity(sender sdk.AccAddress, coins sdk.Coins) *MsgAddLiquidity {
+	return &MsgAddLiquidity{
+		Sender: sender.String(),
+		Coins:  coins,
+	}
+}
+
 func (msg *MsgAddLiquidity) GetSigners() []sdk.AccAddress {
 	addr, err := sdk.AccAddressFromBech32(msg.Sender)
 	if err != nil {
