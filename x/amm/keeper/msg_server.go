@@ -52,6 +52,18 @@ func (m msgServer) SwapExactIn(c context.Context, msg *types.MsgSwapExactIn) (*t
 	}, nil
 }
 
+func (k msgServer) SwapExactOut(c context.Context, msg *types.MsgSwapExactOut) (*types.MsgSwapExactOutResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+	coinIn, err := k.Keeper.SwapExactOut(
+		ctx, sdk.MustAccAddressFromBech32(msg.Sender), msg.CoinOut, msg.MaxCoinIn)
+	if err != nil {
+		return nil, err
+	}
+	return &types.MsgSwapExactOutResponse{
+		CoinIn: coinIn,
+	}, nil
+}
+
 // NewMsgServerImpl returns an implementation of the MsgServer interface
 // for the provided Keeper.
 func NewMsgServerImpl(keeper Keeper) types.MsgServer {
