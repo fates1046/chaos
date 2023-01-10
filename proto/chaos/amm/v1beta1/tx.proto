@@ -30,6 +30,7 @@ message MsgRemoveLiquidity {
 
 message MsgRemoveLiquidityResponse {
   repeated cosmos.base.v1beta1.Coin withdrawn_coins = 1 [
-    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins",
+    (gogoproto.nullable) = false
   ];
 }
