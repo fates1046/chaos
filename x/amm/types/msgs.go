@@ -5,7 +5,10 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgAddLiquidity = "add_liquidity"
+const (
+	TypeMsgAddLiquidity    = "add_liquidity"
+	TypeMsgRemoveLiquidity = "remove_liquidity"
+)
 
 var (
 	_ sdk.Msg = (*MsgAddLiquidity)(nil)
@@ -65,4 +68,11 @@ func (msg *MsgRemoveLiquidity) ValidateBasic() error {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
 	return nil
+}
+
+func (msg *MsgRemoveLiquidity) Route() string { return RouterKey }
+func (msg *MsgRemoveLiquidity) Type() string  { return TypeMsgRemoveLiquidity }
+
+func (msg *MsgRemoveLiquidity) GetSignBytes() []byte {
+	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(msg))
 }
